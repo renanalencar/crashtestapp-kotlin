@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
@@ -23,7 +22,7 @@ class AppRestartService : Service() {
             Intent(this, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 putExtra(AutoRestartExceptionHandler.EXTRA_CRASH_OCCURRED, true)
-                putExtra(AutoRestartExceptionHandler.EXTRA_CRASH_MESSAGE, intent?.getStringExtra("crash_message") ?: "Erro desconhecido")
+                putExtra(AutoRestartExceptionHandler.EXTRA_CRASH_MESSAGE, intent?.getStringExtra("crash_message") ?: "Unknown error")
             }
 
         val pendingIntent =
@@ -34,13 +33,13 @@ class AppRestartService : Service() {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT,
             )
 
-        // Notificação obrigatória para Android 14+
+        // Mandatory notification for Android 14+
         val channelId = "app_restart_channel"
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channel =
             NotificationChannel(
                 channelId,
-                "Reinício do app",
+                "App Restart",
                 NotificationManager.IMPORTANCE_LOW,
             )
         notificationManager.createNotificationChannel(channel)
@@ -48,9 +47,9 @@ class AppRestartService : Service() {
         val notification =
             NotificationCompat
                 .Builder(this, channelId)
-                .setContentTitle("Reiniciando o app")
-                .setContentText("O aplicativo será reiniciado após um erro.")
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // ícone padrão ou personalizado
+                .setContentTitle("Restarting app")
+                .setContentText("The app will be restarted after an error.")
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // default or custom icon
                 .build()
 
         startForeground(1, notification)

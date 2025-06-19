@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 
 class AutoRestartExceptionHandler(
     private val activity: Activity,
@@ -19,6 +20,7 @@ class AutoRestartExceptionHandler(
         exception: Throwable,
     ) {
         try {
+            Log.e("TESTTAG", "App crashed")
             restartApplicationWithPermissions(exception)
         } catch (e: Exception) {
             defaultHandler?.uncaughtException(thread, exception)
@@ -29,7 +31,7 @@ class AutoRestartExceptionHandler(
         val restartIntent =
             Intent(activity, MainActivity::class.java).apply {
                 putExtra(EXTRA_CRASH_OCCURRED, true)
-                putExtra(EXTRA_CRASH_MESSAGE, exception.message ?: "Erro desconhecido")
+                putExtra(EXTRA_CRASH_MESSAGE, exception.message ?: "Unknown error")
                 addFlags(
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or
@@ -37,10 +39,10 @@ class AutoRestartExceptionHandler(
                 )
             }
 
-        // Configurações específicas para Android 14+
+        // Specific settings for Android 14+
         val activityOptions =
             ActivityOptions.makeBasic().apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
                     setPendingIntentCreatorBackgroundActivityStartMode(
                         MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS,
                     )

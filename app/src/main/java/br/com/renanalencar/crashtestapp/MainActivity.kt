@@ -1,5 +1,6 @@
 package br.com.renanalencar.crashtestapp
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,9 +21,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setupExceptionHandler()
         handleRestartInfo()
+
+        enableEdgeToEdge()
 
         setContent {
             CrashTestAppTheme {
@@ -43,9 +45,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setupExceptionHandler() {
-        Thread.setDefaultUncaughtExceptionHandler(
-            AutoRestartExceptionHandler(this),
-        )
+        Thread.setDefaultUncaughtExceptionHandler(CustomExceptionHandler(this))
     }
 
     private fun handleRestartInfo() {
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun triggerCrash(): Unit = throw RuntimeException("Crash intencional disparado pelo usuário!")
+    private fun triggerCrash(): Unit = throw RuntimeException("Crash intentionally triggered by user!")
 
     private fun triggerNullPointerException() {
         val nullString: String? = null
@@ -70,19 +70,19 @@ class MainActivity : ComponentActivity() {
 
     private fun resetCrashCounter() {
         crashCount = 0
-        Toast.makeText(this, "Contador resetado", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Counter reset", Toast.LENGTH_SHORT).show()
     }
 
     private fun showRestartMessage(crashMessage: String?) {
-        val message = "App reiniciado após crash!\nMotivo: $crashMessage"
+        val message = "App restarted after crash!\nReason: $crashMessage"
 
-//        AlertDialog
-//            .Builder(this)
-//            .setTitle("Auto-Restart Executado")
-//            .setMessage(message)
-//            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-//            .show()
+        AlertDialog
+            .Builder(this)
+            .setTitle("Auto-Restart Triggered")
+            .setMessage(message)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
 
-        Toast.makeText(this, "App reiniciado automaticamente", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "App restarted automatically", Toast.LENGTH_LONG).show()
     }
 }

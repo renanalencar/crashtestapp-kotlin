@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -45,11 +46,17 @@ fun WarningMessage() {
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = "Esta é uma demonstração. Não use em produção!",
+                text = "This is a demo app. Do not use it in production!",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color(0xFFD32F2F),
                 fontWeight = FontWeight.Medium,
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun WarningMessagePreview() {
+    WarningMessage()
 }
